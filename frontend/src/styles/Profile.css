@@ -1,0 +1,684 @@
+.profile-container {
+  min-height: 100vh;
+  background-color: #f7fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.profile-header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.back-btn {
+  padding: 8px 16px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.profile-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.profile-logout-btn {
+  padding: 8px 16px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.profile-logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.profile-content {
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 30px 20px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 30px;
+}
+
+.profile-main {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* User Card */
+.user-card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-icon {
+  font-size: 48px;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-email {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+}
+
+.user-status {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+}
+
+/* Billing Section */
+.billing-section {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 20px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.billing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.billing-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  text-align: center;
+}
+
+.billing-label {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.9;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.billing-amount {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.billing-subtext {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* Orders Section */
+.orders-section {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.order-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.order-product {
+  flex: 1;
+}
+
+.order-product-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 4px 0;
+}
+
+.order-date {
+  font-size: 12px;
+  color: #718096;
+  margin: 0;
+}
+
+.order-details {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.order-qty,
+.order-price {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qty-label,
+.price-label {
+  font-size: 12px;
+  color: #718096;
+  font-weight: 600;
+}
+
+.qty-value,
+.price-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.price-value {
+  color: #667eea;
+}
+
+.order-status {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.delivered {
+  background-color: #c6f6d5;
+  color: #22543d;
+}
+
+.no-orders {
+  text-align: center;
+  padding: 40px 20px;
+  color: #718096;
+}
+
+.no-orders p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Sidebar */
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stats-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 100px;
+}
+
+.stats-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #718096;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.checkout-profile-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.checkout-profile-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Desktop: 1024px and up */
+@media (min-width: 1024px) {
+  .profile-content {
+    grid-template-columns: 1fr 300px;
+    gap: 30px;
+    padding: 30px 20px;
+  }
+
+  .profile-header-content {
+    gap: 20px;
+  }
+}
+
+/* Tablet: 768px to 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .profile-header-content {
+    gap: 12px;
+  }
+
+  .profile-title {
+    font-size: 24px;
+  }
+
+  .back-btn,
+  .profile-logout-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .billing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .user-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .stats-card {
+    position: static;
+  }
+}
+
+/* Mobile: up to 767px */
+@media (max-width: 767px) {
+  .profile-container {
+    min-height: 100vh;
+  }
+
+  .profile-header {
+    padding: 12px 0;
+  }
+
+  .profile-header-content {
+    padding: 0 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .back-btn,
+  .profile-logout-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 4px;
+  }
+
+  .profile-title {
+    font-size: 18px;
+    flex-basis: 100%;
+    order: -1;
+  }
+
+  .profile-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px 12px;
+  }
+
+  .profile-main {
+    gap: 20px;
+  }
+
+  .user-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .user-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .avatar-icon {
+    font-size: 40px;
+  }
+
+  .user-email {
+    font-size: 18px;
+  }
+
+  .user-status {
+    font-size: 12px;
+  }
+
+  .billing-section {
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .billing-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .billing-card {
+    padding: 16px;
+  }
+
+  .billing-label {
+    font-size: 11px;
+  }
+
+  .billing-amount {
+    font-size: 24px;
+  }
+
+  .billing-subtext {
+    font-size: 11px;
+  }
+
+  .orders-section {
+    padding: 20px;
+  }
+
+  .orders-list {
+    gap: 12px;
+  }
+
+  .order-item {
+    padding: 12px;
+  }
+
+  .order-header {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .order-details {
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .order-status {
+    justify-content: flex-start;
+  }
+
+  .stats-card {
+    padding: 16px;
+    position: static;
+  }
+
+  .stats-title {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .stat-item {
+    padding: 10px 0;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+
+  .checkout-profile-btn {
+    padding: 10px;
+    font-size: 13px;
+  }
+}
+
+/* Small mobile: up to 480px */
+@media (max-width: 480px) {
+  .profile-header {
+    padding: 10px 0;
+  }
+
+  .profile-header-content {
+    padding: 0 10px;
+    gap: 6px;
+  }
+
+  .back-btn,
+  .profile-logout-btn {
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+
+  .profile-title {
+    font-size: 16px;
+  }
+
+  .profile-content {
+    padding: 12px 10px;
+    gap: 12px;
+  }
+
+  .user-card {
+    padding: 16px;
+  }
+
+  .user-avatar {
+    width: 70px;
+    height: 70px;
+  }
+
+  .avatar-icon {
+    font-size: 32px;
+  }
+
+  .user-email {
+    font-size: 16px;
+  }
+
+  .billing-section {
+    padding: 16px;
+  }
+
+  .billing-grid {
+    gap: 10px;
+  }
+
+  .billing-card {
+    padding: 12px;
+  }
+
+  .billing-label {
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+
+  .billing-amount {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+
+  .billing-subtext {
+    font-size: 10px;
+  }
+
+  .orders-section {
+    padding: 16px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .order-item {
+    padding: 10px;
+  }
+
+  .order-product-name {
+    font-size: 14px;
+  }
+
+  .order-date {
+    font-size: 11px;
+  }
+
+  .qty-label,
+  .price-label {
+    font-size: 11px;
+  }
+
+  .qty-value,
+  .price-value {
+    font-size: 13px;
+  }
+
+  .stats-card {
+    padding: 12px;
+  }
+
+  .stats-title {
+    font-size: 13px;
+  }
+
+  .stat-item {
+    padding: 8px 0;
+  }
+
+  .stat-label {
+    font-size: 11px;
+  }
+
+  .stat-value {
+    font-size: 14px;
+  }
+
+  .checkout-profile-btn {
+    padding: 8px;
+    font-size: 12px;
+  }
+}

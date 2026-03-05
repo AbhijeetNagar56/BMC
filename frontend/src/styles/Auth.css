@@ -4,12 +4,12 @@
   align-items: center;
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  padding: 16px;
 }
 
 .auth-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   padding: 40px;
   width: 100%;
@@ -75,7 +75,7 @@
 .form-input {
   padding: 12px;
   border: 2px solid #e2e8f0;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
   transition: border-color 0.2s;
   font-family: inherit;
@@ -88,11 +88,11 @@
 }
 
 .submit-btn {
-  padding: 12px;
+  padding: 14px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -128,12 +128,109 @@
   text-decoration: underline;
 }
 
-@media (max-width: 480px) {
+/* Tablet and Desktop */
+@media (min-width: 768px) {
   .auth-card {
-    padding: 30px 20px;
+    padding: 40px;
+  }
+
+  .auth-title {
+    font-size: 28px;
+  }
+
+  .auth-form {
+    gap: 20px;
+  }
+
+  .submit-btn {
+    padding: 14px;
+    font-size: 16px;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+  .auth-container {
+    padding: 12px;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+
+  .auth-card {
+    padding: 28px 20px;
+    border-radius: 14px;
+    max-width: 100%;
   }
 
   .auth-title {
     font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  .auth-subtitle {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .auth-form {
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+
+  .form-input {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+  }
+
+  .submit-btn {
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 6px;
+  }
+
+  .auth-link {
+    font-size: 13px;
+  }
+
+  .error-message {
+    padding: 10px;
+    font-size: 13px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 10px;
+    padding-top: 30px;
+  }
+
+  .auth-card {
+    padding: 24px 16px;
+  }
+
+  .auth-title {
+    font-size: 22px;
+  }
+
+  .auth-subtitle {
+    font-size: 12px;
+  }
+
+  .form-input {
+    padding: 11px;
+    font-size: 16px;
+  }
+
+  .submit-btn {
+    padding: 11px;
+    font-size: 14px;
   }
 }

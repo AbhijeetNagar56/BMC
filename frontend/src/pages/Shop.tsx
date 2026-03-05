@@ -14,6 +14,8 @@ interface Product {
 
 interface ShopProps {
   user: { email: string } | null
+  cart: number[]
+  onAddToCart: (productId: number) => void
   onLogout: () => void
 }
 
@@ -92,9 +94,8 @@ const PRODUCTS: Product[] = [
   }
 ]
 
-function Shop({ user, onLogout }: ShopProps) {
+function Shop({ user, cart, onAddToCart, onLogout }: ShopProps) {
   const navigate = useNavigate()
-  const [cart, setCart] = useState<number[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
 
   const categories = ['All', ...Array.from(new Set(PRODUCTS.map(p => p.category)))]
@@ -102,13 +103,13 @@ function Shop({ user, onLogout }: ShopProps) {
     ? PRODUCTS 
     : PRODUCTS.filter(p => p.category === selectedCategory)
 
-  const addToCart = (productId: number) => {
-    setCart([...cart, productId])
-  }
-
   const handleLogout = () => {
     onLogout()
     navigate('/login')
+  }
+
+  const goToProfile = () => {
+    navigate('/profile')
   }
 
   const cartTotal = cart.reduce((sum, productId) => {
@@ -123,6 +124,7 @@ function Shop({ user, onLogout }: ShopProps) {
           <h1 className="shop-title">ShopHub</h1>
           <div className="header-actions">
             <span className="user-email">Welcome, {user?.email}</span>
+            <button className="profile-link" onClick={goToProfile}>My Profile</button>
             <button className="logout-btn" onClick={handleLogout}>Logout</button>
           </div>
         </div>
@@ -176,7 +178,7 @@ function Shop({ user, onLogout }: ShopProps) {
                     <p className="product-price">${product.price.toFixed(2)}</p>
                     <button 
                       className="add-cart-btn"
-                      onClick={() => addToCart(product.id)}
+                      onClick={() => onAddToCart(product.id)}
                     >
                       Add to Cart
                     </button>
