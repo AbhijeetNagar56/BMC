@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import Login from './pages/Login'
@@ -82,21 +82,97 @@ const PRODUCTS = [
 ]
 
 function App() {
+  const API_BASE_URL = 'http://localhost:3000/api'
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState<{ email: string } | null>(null)
   const [cart, setCart] = useState<number[]>([])
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
 
-  const handleLogin = (email: string) => {
-    setUser({ email })
-    setIsAuthenticated(true)
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/me`, {
+          method: 'GET',
+          credentials: 'include'
+        })
+
+        if (!response.ok) {
+          setUser(null)
+          setIsAuthenticated(false)
+          return
+        }
+
+        const data = await response.json()
+        setUser(data.user)
+        setIsAuthenticated(true)
+      } catch {
+        setUser(null)
+        setIsAuthenticated(false)
+      } finally {
+        setIsCheckingAuth(false)
+      }
+    }
+
+    checkAuth()
+  }, [])
+
+  const handleLogin = async (email: string, password: string): Promise<string | null> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password })
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        return data.message || 'Login failed'
+      }
+
+      setUser(data.user)
+      setIsAuthenticated(true)
+      return null
+    } catch {
+      return 'Unable to connect to server'
+    }
   }
 
-  const handleSignup = (email: string) => {
-    setUser({ email })
-    setIsAuthenticated(true)
+  const handleSignup = async (email: string, password: string): Promise<string | null> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password })
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        return data.message || 'Signup failed'
+      }
+
+      setUser(data.user)
+      setIsAuthenticated(true)
+      return null
+    } catch {
+      return 'Unable to connect to server'
+    }
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      })
+    } catch {
+      // Ensure client state is cleared even if logout request fails.
+    }
     setUser(null)
     setIsAuthenticated(false)
     setCart([])
@@ -104,6 +180,10 @@ function App() {
 
   const handleAddToCart = (productId: number) => {
     setCart([...cart, productId])
+  }
+
+  if (isCheckingAuth) {
+    return <div>Loading...</div>
   }
 
   return (

@@ -3,15 +3,16 @@ import { Link } from 'react-router-dom'
 import '../styles/Auth.css'
 
 interface LoginProps {
-  onLogin: (email: string) => void
+  onLogin: (email: string, password: string) => Promise<string | null>
 }
 
 function Login({ onLogin }: LoginProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
 
@@ -25,7 +26,13 @@ function Login({ onLogin }: LoginProps) {
       return
     }
 
-    onLogin(email)
+    setIsSubmitting(true)
+    const loginError = await onLogin(email, password)
+    setIsSubmitting(false)
+
+    if (loginError) {
+      setError(loginError)
+    }
   }
 
   return (
@@ -61,7 +68,9 @@ function Login({ onLogin }: LoginProps) {
             />
           </div>
 
-          <button type="submit" className="submit-btn">Login</button>
+          <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            {isSubmitting ? 'Logging in...' : 'Login'}
+          </button>
         </form>
 
         <p className="auth-link">

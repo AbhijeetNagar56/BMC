@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Profile.css'
 
@@ -20,7 +20,7 @@ interface ProfileProps {
 
 function Profile({ user, cart, products, onLogout }: ProfileProps) {
   const navigate = useNavigate()
-  const [orders, setOrders] = useState<OrderItem[]>([
+  const [orders] = useState<OrderItem[]>([
     {
       id: 1,
       productId: 5,

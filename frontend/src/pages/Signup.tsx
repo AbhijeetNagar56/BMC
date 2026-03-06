@@ -3,21 +3,20 @@ import { Link } from 'react-router-dom'
 import '../styles/Auth.css'
 
 interface SignupProps {
-  onSignup: (email: string) => void
+  onSignup: (email: string, password: string) => Promise<string | null>
 }
 
 function Signup({ onSignup }: SignupProps) {
-  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
 
-    if (!name || !email || !password || !confirmPassword) {
+    if (!email || !password) {
       setError('Please fill in all fields')
       return
     }
@@ -32,12 +31,13 @@ function Signup({ onSignup }: SignupProps) {
       return
     }
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      return
-    }
+    setIsSubmitting(true)
+    const signupError = await onSignup(email, password)
+    setIsSubmitting(false)
 
-    onSignup(email)
+    if (signupError) {
+      setError(signupError)
+    }
   }
 
   return (
@@ -49,18 +49,6 @@ function Signup({ onSignup }: SignupProps) {
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="name" className="form-label">Full Name</label>
-            <input
-              type="text"
-              id="name"
-              className="form-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="John Doe"
-            />
-          </div>
-
           <div className="form-group">
             <label htmlFor="email" className="form-label">Email</label>
             <input
@@ -85,19 +73,9 @@ function Signup({ onSignup }: SignupProps) {
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="confirm-password" className="form-label">Confirm Password</label>
-            <input
-              type="password"
-              id="confirm-password"
-              className="form-input"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm your password"
-            />
-          </div>
-
-          <button type="submit" className="submit-btn">Sign Up</button>
+          <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            {isSubmitting ? 'Creating account...' : 'Sign Up'}
+          </button>
         </form>
 
         <p className="auth-link">
