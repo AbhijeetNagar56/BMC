@@ -1,130 +1,133 @@
 import { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import './App.css'
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
-import Signup from './pages/Signup'
-import Shop from './pages/Shop'
 import Profile from './pages/Profile'
+import Shop from './pages/Shop'
+import Signup from './pages/Signup'
 
-const PRODUCTS = [
-  {
-    id: 1,
-    name: 'Wireless Headphones',
-    price: 89.99,
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop',
-    category: 'Electronics',
-    description: 'Premium wireless headphones with noise cancellation',
-    rating: 4.5
-  },
-  {
-    id: 2,
-    name: 'Smart Watch',
-    price: 199.99,
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop',
-    category: 'Electronics',
-    description: 'Advanced smartwatch with fitness tracking',
-    rating: 4.7
-  },
-  {
-    id: 3,
-    name: 'Laptop Backpack',
-    price: 49.99,
-    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=300&fit=crop',
-    category: 'Accessories',
-    description: 'Durable backpack perfect for laptops',
-    rating: 4.3
-  },
-  {
-    id: 4,
-    name: 'USB-C Hub',
-    price: 39.99,
-    image: 'https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&h=300&fit=crop',
-    category: 'Electronics',
-    description: 'Multi-port USB-C hub for connectivity',
-    rating: 4.4
-  },
-  {
-    id: 5,
-    name: 'Mechanical Keyboard',
-    price: 129.99,
-    image: 'https://images.unsplash.com/photo-1587829191301-e33b1c7f47c1?w=400&h=300&fit=crop',
-    category: 'Electronics',
-    description: 'RGB mechanical keyboard with custom switches',
-    rating: 4.8
-  },
-  {
-    id: 6,
-    name: 'Wireless Mouse',
-    price: 34.99,
-    image: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=300&fit=crop',
-    category: 'Electronics',
-    description: 'Ergonomic wireless mouse with precision tracking',
-    rating: 4.2
-  },
-  {
-    id: 7,
-    name: '4K Monitor',
-    price: 349.99,
-    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=300&fit=crop',
-    category: 'Electronics',
-    description: 'Stunning 4K display monitor for professionals',
-    rating: 4.6
-  },
-  {
-    id: 8,
-    name: 'Webcam HD',
-    price: 79.99,
-    image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400&h=300&fit=crop',
-    category: 'Electronics',
-    description: 'Crystal clear HD webcam for video calls',
-    rating: 4.1
-  }
-]
+export interface User {
+  id: string
+  email: string
+  username: string
+  role: 'user' | 'admin'
+}
+
+export interface Product {
+  id: string
+  name: string
+  price: number
+  image: string
+  category: string
+  description: string
+  rating: number
+}
+
+export interface OrderItem {
+  productId: string
+  productName: string
+  unitPrice: number
+  quantity: number
+  lineTotal: number
+}
+
+export interface Order {
+  id: string
+  totalAmount: number
+  status: string
+  confirmedAt: string
+  createdAt: string
+  items: OrderItem[]
+}
+
+interface NewProductInput {
+  name: string
+  price: string
+  image: string
+  category: string
+  description: string
+  rating: string
+}
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
 
 function App() {
-  const API_BASE_URL = 'http://localhost:3000/api'
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<{ email: string } | null>(null)
-  const [cart, setCart] = useState<number[]>([])
+  const [user, setUser] = useState<User | null>(null)
+  const [cart, setCart] = useState<string[]>([])
+  const [products, setProducts] = useState<Product[]>([])
+  const [orders, setOrders] = useState<Order[]>([])
   const [isCheckingAuth, setIsCheckingAuth] = useState(true)
 
+  const fetchProducts = async () => {
+    const response = await fetch(`${API_BASE_URL}/shop/products`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch products')
+    }
+
+    const data = await response.json()
+    setProducts(data.products || [])
+  }
+
+  const fetchOrders = async () => {
+    const response = await fetch(`${API_BASE_URL}/shop/orders/my`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch orders')
+    }
+
+    const data = await response.json()
+    setOrders(data.orders || [])
+  }
+
   useEffect(() => {
-    const checkAuth = async () => {
+    const initialize = async () => {
       try {
+        await fetchProducts()
+
         const response = await fetch(`${API_BASE_URL}/auth/me`, {
           method: 'GET',
-          credentials: 'include'
+          credentials: 'include',
         })
 
         if (!response.ok) {
           setUser(null)
           setIsAuthenticated(false)
+          setOrders([])
           return
         }
 
         const data = await response.json()
         setUser(data.user)
         setIsAuthenticated(true)
+        await fetchOrders()
       } catch {
         setUser(null)
         setIsAuthenticated(false)
+        setOrders([])
       } finally {
         setIsCheckingAuth(false)
       }
     }
 
-    checkAuth()
+    initialize()
   }, [])
 
-  const handleLogin = async (email: string, password: string): Promise<string | null> => {
+  const handleLogin = async (identifier: string, password: string): Promise<string | null> => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ identifier, password }),
       })
 
       const data = await response.json()
@@ -134,6 +137,7 @@ function App() {
 
       setUser(data.user)
       setIsAuthenticated(true)
+      await fetchOrders()
       return null
     } catch {
       return 'Unable to connect to server'
@@ -145,10 +149,10 @@ function App() {
       const response = await fetch(`${API_BASE_URL}/auth/signup`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       })
 
       const data = await response.json()
@@ -158,6 +162,7 @@ function App() {
 
       setUser(data.user)
       setIsAuthenticated(true)
+      setOrders([])
       return null
     } catch {
       return 'Unable to connect to server'
@@ -168,44 +173,136 @@ function App() {
     try {
       await fetch(`${API_BASE_URL}/auth/logout`, {
         method: 'POST',
-        credentials: 'include'
+        credentials: 'include',
       })
     } catch {
-      // Ensure client state is cleared even if logout request fails.
+      // Keep client state consistent regardless of server response.
     }
+
     setUser(null)
     setIsAuthenticated(false)
     setCart([])
+    setOrders([])
   }
 
-  const handleAddToCart = (productId: number) => {
-    setCart([...cart, productId])
+  const handleAddToCart = (productId: string) => {
+    setCart((prev) => [...prev, productId])
+  }
+
+  const handleAddProduct = async (payload: NewProductInput): Promise<string | null> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/shop/products`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          ...payload,
+          price: Number(payload.price),
+          rating: Number(payload.rating),
+        }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        return data.message || 'Unable to add product'
+      }
+
+      await fetchProducts()
+      return null
+    } catch {
+      return 'Unable to connect to server'
+    }
+  }
+
+  const handleCheckout = async (): Promise<string | null> => {
+    if (cart.length === 0) {
+      return 'Cart is empty'
+    }
+
+    const quantityMap = cart.reduce<Record<string, number>>((acc, productId) => {
+      acc[productId] = (acc[productId] || 0) + 1
+      return acc
+    }, {})
+
+    const items = Object.entries(quantityMap).map(([productId, quantity]) => ({
+      productId,
+      quantity,
+    }))
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/shop/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ items }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) {
+        return data.message || 'Checkout failed'
+      }
+
+      setCart([])
+      await fetchOrders()
+      return null
+    } catch {
+      return 'Unable to connect to server'
+    }
   }
 
   if (isCheckingAuth) {
-    return <div>Loading...</div>
+    return <div className="p-10 text-center text-slate-700">Loading...</div>
   }
 
   return (
     <Router>
       <Routes>
-        <Route 
-          path="/login" 
-          element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/shop" />} 
+        <Route
+          path="/login"
+          element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/shop" />}
         />
-        <Route 
-          path="/signup" 
-          element={!isAuthenticated ? <Signup onSignup={handleSignup} /> : <Navigate to="/shop" />} 
+        <Route
+          path="/signup"
+          element={!isAuthenticated ? <Signup onSignup={handleSignup} /> : <Navigate to="/shop" />}
         />
-        <Route 
-          path="/shop" 
-          element={isAuthenticated ? <Shop user={user} cart={cart} onAddToCart={handleAddToCart} onLogout={handleLogout} /> : <Navigate to="/login" />} 
+        <Route
+          path="/shop"
+          element={
+            isAuthenticated ? (
+              <Shop
+                user={user}
+                cart={cart}
+                products={products}
+                onAddToCart={handleAddToCart}
+                onAddProduct={handleAddProduct}
+                onCheckout={handleCheckout}
+              />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
-        <Route 
-          path="/profile" 
-          element={isAuthenticated ? <Profile user={user} cart={cart} products={PRODUCTS} onLogout={handleLogout} /> : <Navigate to="/login" />} 
+        <Route
+          path="/profile"
+          element={
+            isAuthenticated ? (
+              <Profile
+                user={user}
+                cart={cart}
+                products={products}
+                orders={orders}
+                onLogout={handleLogout}
+              />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/shop" : "/login"} />} />
+        <Route path="/" element={<Navigate to={isAuthenticated ? '/shop' : '/login'} />} />
       </Routes>
     </Router>
   )

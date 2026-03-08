@@ -1,3 +1,4 @@
+import './config/env.js';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -5,16 +6,16 @@ import authRoutes from './routes/authRoutes.js';
 import shopRoutes from './routes/shopRoutes.js';
 import { connectDB } from './config/db.js';
 import { initializeRedis } from './redis/redis.js';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { seedProducts } from './data/seedProducts.js';
+import { seedAdmin } from './data/seedAdmin.js';
 
 const app = express();
+const frontendOrigin = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: frontendOrigin,
     credentials: true,
   }),
 );
@@ -31,6 +32,8 @@ const PORT = process.env.PORT || 3000;
 const startServer = async () => {
   try {
     await connectDB();
+    await seedAdmin();
+    await seedProducts();
     await initializeRedis();
 
     app.listen(PORT, () => {
